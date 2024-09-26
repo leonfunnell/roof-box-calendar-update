@@ -1,8 +1,3 @@
-provider "google" {
-  project = var.gcp_project_id
-  region  = var.gcp_region
-}
-
 resource "google_project_service" "cloud_functions_api" {
   project = var.gcp_project_id
   service = "cloudfunctions.googleapis.com"
