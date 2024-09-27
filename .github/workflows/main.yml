@@ -38,6 +38,8 @@ jobs:
           -var="gcp_project_id=${GCP_PROJECT_ID}" \
           -var="gcp_region=${GCP_REGION}" \
           -var="service_account_key=${GCP_SA_KEY}"
+          -var="gcp_service_account_secret=${GCP_SERVICE_ACCOUNT_SECRET}"
+
 
     - name: Apply Terraform
       env:
