@@ -1,12 +1,20 @@
 variable "gcp_project_id" {
-  description = "Google Cloud project ID"
+  description = "The GCP project ID"
+  type        = string
 }
 
 variable "gcp_region" {
-  description = "Google Cloud region"
-  default     = "europe-west2" # London region
+  description = "The GCP region for deployment"
+  type        = string
 }
 
-variable "gcp_service_account_key_file" {
-  description = "Path to the GCP service account key JSON file"
+variable "service_account_key" {
+  description = "The GCP service account key in JSON format"
+  type        = string
+  sensitive   = true
+}
+
+variable "gcp_service_account_secret" {
+  description = "The Secret Manager name for the service account key"
+  type        = string
 }
