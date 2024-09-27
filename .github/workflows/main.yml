@@ -13,12 +13,16 @@ jobs:
     - name: Checkout the code
       uses: actions/checkout@v2
 
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v1
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}  # Using the GCP Service Account Key from GitHub Secrets
+
     - name: Set up Google Cloud SDK
       uses: google-github-actions/setup-gcloud@v1
       with:
-        project_id: ${{ vars.GCP_PROJECT_ID }}
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
-        export_default_credentials: true
+        project_id: ${{ vars.GCP_PROJECT_ID }}  # Now using GitHub Variable for project ID
+        install_components: gcloud
 
     - name: Install Terraform
       run: |
@@ -29,27 +33,24 @@ jobs:
 
     - name: Initialize Terraform
       env:
-        GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
-        GCP_REGION: ${{ vars.GCP_REGION }}
-        GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+        GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}  # Using GitHub Variable for project ID
+        GCP_REGION: ${{ vars.GCP_REGION }}          # Using GitHub Variable for region
         GCP_SERVICE_ACCOUNT_SECRET: ${{ secrets.GCP_SERVICE_ACCOUNT_SECRET }}
       run: |
         cd terraform
         terraform init \
           -var="gcp_project_id=${GCP_PROJECT_ID}" \
           -var="gcp_region=${GCP_REGION}" \
-          -var="service_account_key=${GCP_SA_KEY}"
           -var="gcp_service_account_secret=${GCP_SERVICE_ACCOUNT_SECRET}"
-
 
     - name: Apply Terraform
       env:
-        GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
-        GCP_REGION: ${{ vars.GCP_REGION }}
-        GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+        GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}  # Using GitHub Variable for project ID
+        GCP_REGION: ${{ vars.GCP_REGION }}          # Using GitHub Variable for region
+        GCP_SERVICE_ACCOUNT_SECRET: ${{ secrets.GCP_SERVICE_ACCOUNT_SECRET }}
       run: |
         cd terraform
         terraform apply -auto-approve \
           -var="gcp_project_id=${GCP_PROJECT_ID}" \
           -var="gcp_region=${GCP_REGION}" \
-          -var="service_account_key=${GCP_SA_KEY}"
+          -var="gcp_service_account_secret=${GCP_SERVICE_ACCOUNT_SECRET}"
